@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import contextlib
 import urllib2
 import json
 from counthd import count_hd
@@ -21,13 +22,12 @@ def main():
 
         # Get JSON object    
         try:
-            url_request = urllib2.Request(url, headers={'User-Agent' : "My Browser"})        
-            url_response = urllib2.urlopen(url_request)
-            data = json.load(url_response)
+            url_request = urllib2.Request(url, headers={'User-Agent' : "My Browser"})            
+            with contextlib.closing(urllib2.urlopen(url_request)) as url_response:
+                data = json.load(url_response)
         except:
-            print("Problem with loading Page {0}".format(page_number))
-            page_number += 1
-            continue
+            print("Problem with loading Page {0}".format(page_number))            
+            break
                     
         # Get 'more' value
         more = data["more"]
